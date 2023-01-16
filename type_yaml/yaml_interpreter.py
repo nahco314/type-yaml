@@ -43,6 +43,7 @@ class YamlInterpreter(InterpreterBase):
         type_: TypeLike,
         stream: TextIO,
         *,
+        multi_document: bool = False,
         loader: Type = SafeLoader,
         true_strings: tuple[str, ...] = ("true", "yes", "on", "1"),
         false_strings: tuple[str, ...] = ("false", "no", "off", "0"),
@@ -57,6 +58,7 @@ class YamlInterpreter(InterpreterBase):
             globalns=globalns,
             localns=localns,
         )
+        self.multi_document = multi_document
         self.event_list: list[Event] = list(parse(stream, Loader=loader))
         self.pos = 0
 
@@ -150,6 +152,18 @@ class YamlInterpreter(InterpreterBase):
             res.append(self._load(item_type))
 
         self.advance()
+
+        return res
+
+    def _load_multi_document(self, type_: Type[list], typelike: TypeLike) -> list[Any]:
+        item_type = self.get_list_item(cast(Type[list], type_))
+
+        res = []
+        while isinstance(self.event, DocumentStartEvent):
+            self.advance()
+            res.append(self._load(item_type))
+            assert isinstance(self.event, DocumentEndEvent)
+            self.advance()
 
         return res
 
@@ -346,14 +360,23 @@ class YamlInterpreter(InterpreterBase):
             raise errors.YamlTypeError(  # pragma: no cover
                 self.event.start_mark, "empty stream, expected data"
             )
-        assert isinstance(self.get_and_advance(), DocumentStartEvent)
 
-        res = self._load(self.type)
+        if self.multi_document:
+            type_ = self.eval_typelike(self.type)
+            if not self.is_list(type_):
+                raise ValueError("multi_document requires list type")
+            type_ = cast(Type[list], type_)
+            res = self._load_multi_document(type_, self.type)
+        else:
+            assert isinstance(self.get_and_advance(), DocumentStartEvent)
 
-        if not isinstance(self.get_and_advance(), DocumentEndEvent):
-            raise errors.YamlTypeError(  # pragma: no cover
-                self.event.start_mark, "expected document end"
-            )
+            res = self._load(self.type)
+
+            if not isinstance(self.get_and_advance(), DocumentEndEvent):
+                raise errors.YamlTypeError(  # pragma: no cover
+                    self.event.start_mark, "expected document end"
+                )
+
         if not isinstance(self.get_and_advance(), StreamEndEvent):
             raise errors.YamlTypeError(  # pragma: no cover
                 self.event.start_mark, "expected stream end"

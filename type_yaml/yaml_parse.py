@@ -18,6 +18,7 @@ def load(
     type_: TypeLike,
     stream: TextIO,
     *,
+    multi_document: bool = False,
     loader: Type = SafeLoader,
     true_strings: tuple[str, ...] = ("true", "yes", "on", "1"),
     false_strings: tuple[str, ...] = ("false", "no", "off", "0"),
@@ -28,6 +29,7 @@ def load(
     interpreter = YamlInterpreter(
         type_,
         stream,
+        multi_document=multi_document,
         loader=loader,
         true_strings=true_strings,
         false_strings=false_strings,
@@ -42,6 +44,7 @@ def loads(
     type_: TypeLike,
     string: str,
     *,
+    multi_document: bool = False,
     loader: Type = SafeLoader,
     true_strings: tuple[str, ...] = ("true", "yes", "on", "1"),
     false_strings: tuple[str, ...] = ("false", "no", "off", "0"),
@@ -57,6 +60,7 @@ def loads(
             return load(
                 type_,
                 f,
+                multi_document=multi_document,
                 loader=loader,
                 true_strings=true_strings,
                 false_strings=false_strings,

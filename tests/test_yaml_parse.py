@@ -75,6 +75,12 @@ class Person2:
     friends: List["Person2"]
 
 
+@dataclass
+class Point:
+    x: int
+    y: int
+
+
 class Tag:
     def __init__(self, name: str) -> None:
         self.name = name
@@ -178,6 +184,31 @@ def test_type_name_map() -> None:
             globalns=globals(),
             localns=locals(),
             type_name_map={"Person1": Person2},
+        )
+        == p
+    )
+
+
+def test_multi_document() -> None:
+    yaml = dedent(
+        """\
+        ---
+        x: 1
+        y: 2
+        ---
+        x: 3
+        y: 4
+        """
+    )
+
+    p = [Point(1, 2), Point(3, 4)]
+    assert (
+        loads(
+            "list[Point]",
+            yaml,
+            multi_document=True,
+            globalns=globals(),
+            localns=locals(),
         )
         == p
     )
