@@ -73,8 +73,8 @@ def loads(
 
 
 def dump(value: Any, stream: TextIO, *, dumper: Type = RealYamlDumper) -> None:
-    dumper = YamlDumper(value, stream, dumper=dumper)
-    dumper.dump()
+    dumper_instance = YamlDumper(value, stream, dumper=dumper)
+    dumper_instance.dump()
 
 
 def dumps(value: Any, *, dumper: Type = RealYamlDumper) -> str:
