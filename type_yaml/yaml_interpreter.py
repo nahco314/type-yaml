@@ -8,6 +8,10 @@ from typing import Type
 from typing import Union
 from typing import cast
 
+from type_parse.base import DumperBase
+from type_parse.base import InterpreterBase
+from type_parse.base import TypeHandler
+from type_parse.base import TypeLike
 from yaml import DocumentEndEvent
 from yaml import DocumentStartEvent
 from yaml import Event
@@ -25,10 +29,6 @@ from yaml import dump
 from yaml import parse
 
 import type_yaml.errors as errors
-from type_yaml.base import DumperBase
-from type_yaml.base import InterpreterBase
-from type_yaml.base import TypeHandler
-from type_yaml.base import TypeLike
 
 
 class YamlInterpreter(InterpreterBase):

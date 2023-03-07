@@ -8,9 +8,9 @@ from typing import Any
 from typing import List
 
 import pytest
+from type_parse.base import TypeLike
 
 import type_yaml.errors as errors
-from type_yaml.base import TypeLike
 from type_yaml.yaml_parse import dumps
 from type_yaml.yaml_parse import loads
 

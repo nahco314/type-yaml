@@ -6,9 +6,9 @@ from typing import Any
 from typing import TextIO
 from typing import Type
 
+from type_parse.base import TypeLike
 from yaml import SafeLoader
 
-from type_yaml.base import TypeLike
 from type_yaml.yaml_interpreter import RealYamlDumper
 from type_yaml.yaml_interpreter import YamlDumper
 from type_yaml.yaml_interpreter import YamlInterpreter

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "type-yaml"
-version = "0.2.0"
+version = "0.3.0"
 description = ""
 authors = ["nahco314 <nahco3_ta@yahoo.co.jp>"]
 readme = "README.md"
@@ -9,6 +9,7 @@ packages = [{include = "type_yaml"}]
 [tool.poetry.dependencies]
 python = "^3.8.1"
 pyyaml = "^6.0"
+type-parse = "^0.1.0"
 
 
 [tool.poetry.group.dev.dependencies]
